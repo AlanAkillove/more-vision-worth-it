@@ -1,0 +1,20 @@
+# M1 canonical preprocessing config (plan §3). All pixel-affecting fields feed the
+# preprocessing hash; nothing about resolution-specific FOV is hardcoded elsewhere.
+preprocessing:
+  banner_remove_px: 20          # approx copyright banner height at the bottom
+  pad_mode: square
+  pad_fill: 0                   # black padding in 0-255 space (before normalization)
+  pad_anchor: center            # deterministic placement of the debannered image
+  canonical:
+    mode: pad_square_from_debannered
+    size: null                  # null -> canonical side = max(w, h) after de-banner (no forced upscale)
+  target_sizes: [112, 224, 448]
+  interpolation: bicubic
+  antialias: true
+  normalize:
+    mean: [0.485, 0.456, 0.406]  # DINOv2 / ImageNet
+    std: [0.229, 0.224, 0.225]
+  deterministic: true
+
+check:
+  n_samples: 4                  # images saved to outputs/phase0/preproc_check for FOV eyeball

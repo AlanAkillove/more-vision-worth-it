@@ -1,13 +1,15 @@
 # --- Datasets / large local assets (NEVER commit) ---
-FGVC_Aircraft/
-.fgvc_tmp/
-lfs/
-data/
+# root-anchored so source dirs like src/mvwi/data/ are NOT ignored
+/FGVC_Aircraft/
+/.fgvc_tmp/
+/lfs/
+/data/
 
 # --- Generated artifacts ---
-outputs/
-cache/
-checkpoints/
+/outputs/
+/cache/
+/checkpoints/
+/scratch/
 
 # --- Model / feature / tensor artifacts ---
 *.pt

@@ -1,0 +1,21 @@
+# M2 feature-extraction config (plan §4/§5). Frozen DINOv2 ViT-S/14, offline cache.
+backbone:
+  name: dinov2_vits14
+  source: local
+  local_dir: cache/vendor/dinov2-main    # vendored repo (avoids GitHub API rate limits)
+  checkpoint: dinov2_vits14_pretrain      # resolved by hubconf; weights cached under TORCH_HOME
+  patch_size: 14
+  embed_dim: 384
+  frozen: true
+  eval: true
+identifier: dinov2_vits14
+
+resolutions: [112, 224, 448]
+splits: [train, val]                       # Phase 0 does NOT extract test
+batch_size:
+  "112": 64
+  "224": 32
+  "448": 8                                 # OOM at 448 -> lower ONLY this value
+num_workers: 4
+
+cache_dir_template: cache/features/{preproc_hash}/dinov2_vits14/{res}/{split}.npz

@@ -1,0 +1,34 @@
+project:
+  name: more-vision-worth-it
+  repo: https://github.com/AlanAkillove/more-vision-worth-it
+  seed: 1337
+
+paths:
+  raw_dir: FGVC_Aircraft/raw/fgvc-aircraft-2013b/data
+  images_dir: FGVC_Aircraft/raw/fgvc-aircraft-2013b/data/images
+  cache_dir: cache
+  outputs_dir: outputs
+  docs_dir: docs
+
+outputs:
+  phase0_dir: outputs/phase0
+  metrics: outputs/phase0/metrics.json
+  run_config: outputs/phase0/run_config.yaml
+  tables_dir: outputs/phase0/tables
+  figures_dir: outputs/phase0/figures
+  preproc_check_dir: outputs/phase0/preproc_check
+  logs_dir: outputs/logs
+  dataset_report_json: outputs/dataset_report.json
+  dataset_report_md: outputs/dataset_report.md
+
+device:
+  name: cuda
+  allow_tf32: true
+  amp_dtype: fp16
+
+logging:
+  level: INFO
+
+git:
+  capture_commit: true
+  warn_if_dirty: true
