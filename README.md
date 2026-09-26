@@ -40,7 +40,20 @@ conda activate deepminer
 
 See `docs/environment_report.md` for the verified environment details and `requirements.txt` for pinned versions. (Tip: `conda run -n deepminer python ...` works in non-interactive shells.)
 
+## Status
+
+**Phase 0 — complete, with a scoped NO-GO.** The project ran a pre-registered Oracle Headroom audit plus a single pre-defined nonlinear follow-up test, and reached **NO-GO for global-state tiny routing**.
+
+| Question | Verdict |
+| --- | --- |
+| Q1 — recoverable-error phenomenon exists | **PASS** (at 112→448: WC ≈ 32.9%, CW ≈ 4.2%; additional vision is non-monotonic) |
+| Q2 — oracle headroom over uncertainty | **PASS** (sequential oracle ≈ 72.6% > Always-High 68.4%) |
+| Q3 — recoverability readable from global 112 state | **FAIL** (a linear probe and a fixed tiny MLP both ≤ best scalar uncertainty) |
+
+Headline finding: *Always More Vision ≠ Optimal Vision Allocation*. The oracle headroom is real, but the frozen **global** low-resolution state does not expose it to a lightweight router. This is reported honestly as a *scoped* negative result: it does **not** claim recoverability is unpredictable from all low-resolution information (spatial / patch-level state is untested). See `docs/phase0_report.md` and `docs/phase0_followup_report.md`.
+
 ## Roadmap
 
-- **Phase 0** — inference-only setup on DINOv2 ViT-S/14: frozen feature extraction, offline feature caching, and a linear probe baseline. Status: **planned / not yet executed**; see `docs/phase0_plan.md`.
+- **Phase 0** — inference-only audit on DINOv2 ViT-S/14: frozen feature extraction, offline caching, transition/oracle analysis, calibration audit, and linear + nonlinear learnability probes. Status: **complete — NO-GO for the global-state formulation**; no further rescue of this formulation is planned.
+- **Phase S0 (proposed, not started)** — *Spatial-State Recoverability Audit*: test whether the 8×8 patch tokens DINOv2 already computes at 112 encode recoverability that global pooling/CLS discards. This is a **new, separately pre-registered hypothesis** (cheap spatial summaries before any attention model), not a continuation or a larger controller for Phase 0.
 

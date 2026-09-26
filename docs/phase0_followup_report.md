@@ -110,11 +110,23 @@ N recoverable (WC) = 1095
 4. gain outside bootstrap noise: dAUPRC CI low=-0.046 -> FAIL
 - gate status for the MLP: **NO-GO**
 
-**Conclusion — NO-GO.** With calibration handled and a nonlinear MLP given the full 112 representation (embedding + logits + uncertainty), out-of-fold recovery of WC is *not* better than scalar uncertainty routing on any axis: AUPRC does not improve, no operating point gains WC recall, routing regret is not reduced, and the differences are inside bootstrap noise. The Q2 headroom is real but is **not learnable from the global low-resolution state** by a model this size. We therefore **stop the current 'tiny decision model from global low-resolution representation' formulation.** We do NOT escalate to a Transformer because the MLP failed — the failure is about the *input representation*, not model class.
+**Conclusion — NO-GO for the global-state formulation.** With calibration handled and a nonlinear MLP given the full post-112 global state (embedding + logits + uncertainty), out-of-fold recovery of WC is *not* better than scalar uncertainty routing on any axis: AUPRC does not improve, no operating point gains WC recall, routing regret is not reduced, and the differences are inside bootstrap noise. The Q2 headroom is real, but **we find no evidence that the frozen global low-resolution state provides exploitable recoverability information beyond scalar uncertainty under the tested lightweight probes** (one linear probe and one fixed tiny MLP). We therefore **stop the current 'tiny decision model from global low-resolution representation' formulation.** We do NOT escalate to a Transformer, because nothing in this experiment indicates a larger controller on the *same* global state would help.
+
+## Scope of the negative result  (and known caveats)
+
+- **What this NO-GO claims:** under `DINOv2-S/14 + 112->448 + FGVC-Aircraft + {global embedding, logits, scalars}`, neither a linear probe nor a fixed tiny MLP extracts recoverability signal beyond scalar uncertainty: *global low-resolution state does not imply recoverability signal beyond uncertainty* for the tested probes.
+
+- **What it does NOT claim:** that recoverability is unpredictable from *any* low-resolution information. This test does not cover different pooling, patch-/spatial- level features, other training objectives, class-aware structure, larger samples, or a different model class; those remain open, so the broader research direction is not falsified — only this specific formulation.
+
+- **Phenomenon worth keeping:** P(WC)~32.9%, P(CW)~4.2% and a sequential oracle of ~72.6% > Always-High 68.4% show additional vision is **non-monotonic** and *Always More Vision != Optimal Vision Allocation*. The headroom is large; this global pooled state simply does not expose it to a tiny router.
+
+- **Known minor caveats (do not change the verdict, deliberately not re-run):** (i) the *calibrated* energy baseline divides logits by the mean temperature rather than each sample's fold temperature, so it is not strictly out-of-fold; the headline comparison uses the raw max-prob scalar and does not depend on it. (ii) MLP standardization computes mean/std on the whole outer-train before the inner early-stopping split, a slight inner-loop leakage; the outer held-out fold never enters the scaler and any effect favours the MLP, so it cannot manufacture the observed failure.
 
 ## F7  Future formulation note (documented, NOT implemented)
 
 - Phase 0 sees WC (+value) *and* CW (-value), so a later policy should model **signed** visual value g = +1(WC) / 0(CC,WW) / -1(CW), i.e. estimate P(WC|s) and P(CW|s) and act on E[g|s] = P(WC|s) - P(CW|s), rather than P(WC|s) alone. This follow-up deliberately kept the P(WC) target for direct comparability with the original Phase-0 gate.
+
+- The single natural next branch, if the project continues, is a **new** hypothesis — recoverability may be *spatially* encoded in the 8x8 patch tokens that DINOv2 already computes at 112 and that global pooling/CLS discards — not a larger controller on the same global vector. Such a 'Spatial-State Recoverability Audit' (Phase S0) would test cheap spatial summaries (patch mean/std/max, norm / cosine dispersion, patch-level classifier disagreement) before any attention model, and **must be separately pre-registered** with its own GO/NO-GO; it is not started here.
 
 ## Exact final verdict
 

@@ -128,7 +128,7 @@ Scalar uncertainty scores separate WC only weakly (AUROC ~0.63-0.67).
 
 - Q1 PASS / Q2 PASS / Q3 FAIL -> **OVERALL: NEEDS ONE PREDEFINED FOLLOW-UP TEST**.
 - The core research premise SURVIVES: more vision genuinely has marginal value beyond uncertainty (Q1 strong; Q2 large oracle-vs-scalar headroom). But a cheap logistic probe could not read that headroom (Q3 NO-GO).
-- **Do NOT proceed to design the Transformer / decision model now** (plan §9.5). One bounded, predefined follow-up test is warranted before any GO: a stronger — but still non-neural — learnability probe (e.g. gradient-boosted / cross-validated logistic features, or richer high-res-side features), pre-registered against the same Q3 gates. If that also fails, the honest outcome is NO-GO.
+- **Do NOT proceed to design the Transformer / decision model now** (plan §9.5). One bounded, predefined follow-up test is warranted before any GO: a stronger — but still non-neural — learnability probe over the SAME post-112 low-resolution state (e.g. gradient-boosted / cross-validated features). High-res (448) features are supervision/oracle only and can never be router inputs before escalation, per the causal routing constraint. Pre-register against the same Q3 gates; if that also fails, the honest outcome is NO-GO.
 
 ## Prohibited-scope reminder (plan §19)
 

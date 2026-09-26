@@ -216,9 +216,11 @@ def build_report(cfg, metrics=None):
           "logistic probe could not read that headroom (Q3 NO-GO).")
         A("- **Do NOT proceed to design the Transformer / decision model now** (plan §9.5). "
           "One bounded, predefined follow-up test is warranted before any GO: a stronger — but "
-          "still non-neural — learnability probe (e.g. gradient-boosted / cross-validated "
-          "logistic features, or richer high-res-side features), pre-registered against the "
-          "same Q3 gates. If that also fails, the honest outcome is NO-GO.")
+          "still non-neural — learnability probe over the SAME post-112 low-resolution state "
+          "(e.g. gradient-boosted / cross-validated features). High-res (448) features are "
+          "supervision/oracle only and can never be router inputs before escalation, per the "
+          "causal routing constraint. Pre-register against the same Q3 gates; if that also "
+          "fails, the honest outcome is NO-GO.")
     elif overall == "GO":
         A("- proceed to the tiny decision-model design phase.")
     else:
