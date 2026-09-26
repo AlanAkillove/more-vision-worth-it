@@ -1,0 +1,60 @@
+# Phase-0 SINGLE predefined follow-up test (brief F0-F8).
+# Decides whether recoverability (WC) is NONLINEARLY predictable from the 112-resolution
+# state, beyond scalar uncertainty and linear probes. This test is allowed to terminate the
+# project; the Q3 gate is reused UNCHANGED for direct comparability with Phase 0.
+#
+# Shared decision fields (main_transition, cost, utility, uncertainty_scores,
+# escalation_rates) are inherited from configs/analysis.yaml by the scripts.
+
+calibration:
+  method: temperature_scaling
+  n_folds: 5
+  stratify_on: y_true            # class-stratified folds for the cross-fit
+  ece_bins: 15
+  optimizer: {lr: 0.05, max_iter: 300}   # 1-D fit of log-temperature (torch Adam)
+  high_conf_thresholds: [0.8, 0.9]
+
+# 5-fold out-of-fold protocol for the nonlinear probe and the re-run logistic probes.
+cv:
+  n_folds: 5
+  stratify_on: wc                # folds stratified on the binary target
+  seeds: [0, 1, 2]               # 3 random seeds per outer fold
+  inner_val_fraction: 0.15       # carved from the OUTER-TRAIN folds only (never the held-out fold)
+  inner_seed: 99
+
+mlp:
+  # FIXED tiny MLP (no architecture search): in -> Linear(128) -> GELU -> Dropout(0.1)
+  #                                      -> Linear(32) -> GELU -> Linear(1)
+  hidden: [128, 32]
+  dropout: 0.1
+  activation: gelu
+  optimizer: adamw
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  batch_size: 128
+  max_epochs: 300
+  patience: 30                   # early-stop on INNER-val BCE; held-out fold never used
+  min_delta: 1.0e-4
+  standardize: train_fold_only   # z-score with training-fold statistics only
+
+# Router inputs: strictly post-112-forward-pass information (no 448, no oracle leakage).
+features: [z_112, logits, confidence, entropy, margin, energy]
+target: WC
+
+logistic_probes:
+  logit_only: [logits, confidence, entropy, margin, energy]
+  embedding_logit: [z_112, logits, confidence, entropy, margin, energy]
+  C: 1.0
+  max_iter: 2000
+
+bootstrap:
+  n: 1000
+  seed: 1337
+  ci: [2.5, 97.5]
+
+# UNCHANGED from Phase 0 (F6): all four must hold vs the BEST scalar baseline for a PASS.
+q3:
+  recall_gain_pp: 5.0
+  regret_reduction: 0.10
+  auprc_gain: 0.03
+  min_operating_points: 2

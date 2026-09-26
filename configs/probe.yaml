@@ -1,0 +1,35 @@
+# M6 lightweight predictability probe config (plan §15 / B.6).
+# Phase-0 exploratory audit only: two logistic-regression probes that try to predict the
+# marginal-value target WC beyond what a scalar uncertainty score can, WITHOUT training any
+# neural decision model.
+probe:
+  model: logistic_regression
+  solver: lbfgs
+  C: 1.0
+  max_iter: 2000
+  standardize: true
+
+# Leakage discipline: the shared backbone classifier was trained on TRAIN, so its VAL
+# predictions are already out-of-sample. We still never fit the probe on the same rows it
+# is scored on: VAL is split into disjoint fit / eval folds (stratified on WC).
+split:
+  mode: temporary_val_split           # exploratory; clearly labelled in the report
+  eval_fraction: 0.4
+  stratify_on: wc
+  seed: 1337
+
+# Probe feature blocks (all taken at the LOW resolution of the main transition).
+probe_a_features: [logits, confidence, entropy, margin, energy]
+probe_b_features: [z_112, logits, confidence, entropy, margin, energy]
+target: WC
+
+bootstrap:
+  n: 500
+  seed: 1337
+  ci: [2.5, 97.5]
+
+q3:
+  recall_gain_pp: 5.0
+  regret_reduction: 0.10
+  auprc_gain: 0.03
+  min_operating_points: 2
