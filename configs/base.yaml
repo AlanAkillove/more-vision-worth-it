@@ -9,6 +9,9 @@ paths:
   cache_dir: cache
   outputs_dir: outputs
   docs_dir: docs
+  feature_template: cache/features/{preproc_hash}/dinov2_vits14/{res}/{split}.npz
+  classifier_template: cache/classifier/{preproc_hash}/classifier.npz
+  outcomes_template: cache/outcomes/{preproc_hash}/outcomes_{split}.parquet
 
 outputs:
   phase0_dir: outputs/phase0

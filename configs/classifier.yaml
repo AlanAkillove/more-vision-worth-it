@@ -1,0 +1,17 @@
+# M3 shared linear classifier config (plan §6 / B.4).
+# One head h: R^384 -> R^K trained on the joint {z_112, z_224, z_448} of the TRAIN split.
+classifier:
+  model: logistic_regression
+  solver: lbfgs            # stable & deterministic for a convex multinomial objective
+  C: 1.0
+  max_iter: 2000
+  multi_class: multinomial
+  class_weight: null       # set to "balanced" only if class imbalance warrants it (recorded)
+  n_jobs: -1
+  standardize:
+    enable: true
+    fit_on: train          # scaler is fit ONLY on train features (no val leakage)
+
+train_splits: [train]
+eval_split: val
+resolutions: [112, 224, 448]

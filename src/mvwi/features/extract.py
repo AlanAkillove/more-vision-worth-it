@@ -18,8 +18,15 @@ from mvwi.data.fgvc_aircraft import (AircraftDataset, collate_fn, load_split,
                                       load_variants, name_to_idx)
 
 
+def _feature_template(cfg):
+    # single source of truth: base.yaml paths.feature_template, with the legacy
+    # top-level cache_dir_template (extract.yaml) accepted as a fallback.
+    paths = cfg.get("paths", {})
+    return paths.get("feature_template") or cfg["cache_dir_template"]
+
+
 def cache_path(cfg, preproc_hash, res, split):
-    return R(cfg["cache_dir_template"].format(preproc_hash=preproc_hash, res=res, split=split))
+    return R(_feature_template(cfg).format(preproc_hash=preproc_hash, res=res, split=split))
 
 
 def load_features(cfg, preproc_hash, res, split):

@@ -1,0 +1,34 @@
+# M4/M5 audit config (plan §8/§9/§10 + B.5). Every decision threshold lives here,
+# never hardcoded, and is applied mechanically to the outcome table.
+transitions: [[112, 224], [224, 448], [112, 448]]
+main_transition: [112, 448]
+
+# Q1 (recoverable-error phenomenon exists) -- pre-registered engineering gates.
+q1:
+  wc_go_min: 150         # WC count for GO
+  wc_border_min: 75      # below this -> NO-GO
+  wc_frac_go: 0.045      # WC / N for GO
+  wc_frac_nogo: 0.02     # WC / N below this -> NO-GO
+  rec_err_go: 0.15       # WC / N(low wrong) for GO
+  acc_gain_pp: 2.0       # Acc_high - Acc_low (percentage points) for the "meaningful gain" gate
+
+# High-confidence recoverable errors (plan §10).
+high_conf:
+  thresholds: [0.8, 0.9]
+  count_strong: 30
+  frac_strong: 0.10
+
+# M5 will consume these (defined now so config is stable across milestones).
+uncertainty_scores: [max_prob, entropy, margin, energy]
+escalation_rates: [0.20, 0.40, 0.60]
+utility:
+  type: error_to_correct
+  weight: 1.0
+cost:
+  C_112: 1.0
+  C_448: 4.0
+  C_router: 0.0
+q2:
+  nogo_acc_gap: 0.005
+  go_acc_gap: 0.0075
+  go_recall_gap: 0.10
