@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mvwi"
+version = "0.0.1"
+description = "Predicting the marginal value of additional visual evidence for budget-aware visual recognition."
+requires-python = ">=3.10"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["mvwi"]

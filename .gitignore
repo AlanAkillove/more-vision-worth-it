@@ -1,0 +1,38 @@
+# --- Datasets / large local assets (NEVER commit) ---
+FGVC_Aircraft/
+.fgvc_tmp/
+lfs/
+data/
+
+# --- Generated artifacts ---
+outputs/
+cache/
+checkpoints/
+
+# --- Model / feature / tensor artifacts ---
+*.pt
+*.pth
+*.ckpt
+*.npz
+*.npy
+*.parquet
+*.arrow
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+build/
+dist/
+
+# --- Notebooks ---
+.ipynb_checkpoints/
+
+# --- Virtual envs / secrets ---
+.venv/
+venv/
+.env
+
+# --- Logs ---
+*.log

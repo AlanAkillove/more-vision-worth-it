@@ -1,0 +1,25 @@
+# Core dependencies for MVWI (Phase 0 setup).
+# Verified environment: conda env `deepminer`, Python 3.10.19,
+# NVIDIA GeForce RTX 4060 Laptop GPU (8 GB), driver 572.61.
+#
+# PyTorch is built against CUDA 12.1 (cu121 wheels); torch.cuda.is_available() == True.
+# torch and torchvision versions are matched (2.5.1 <-> 0.20.1).
+# Install with the CUDA 12.1 wheel index if a clean reinstall is needed:
+#   python -m pip install torch==2.5.1+cu121 torchvision==0.20.1+cu121 \
+#       --index-url https://download.pytorch.org/whl/cu121
+
+# --- Deep learning (CUDA 12.1 wheels: cu121) ---
+torch==2.5.1+cu121        # CUDA 12.1 build
+torchvision==0.20.1+cu121 # CUDA 12.1 build, matched to torch 2.5.1
+
+# --- Scientific / data ---
+numpy==1.26.4
+pandas==2.3.3
+scikit-learn==1.7.2
+pyarrow==23.0.0
+
+# --- Visualization / IO / config ---
+matplotlib==3.10.8
+pillow==12.0.0
+pyyaml==6.0.3
+tqdm==4.67.3
